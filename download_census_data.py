@@ -13,9 +13,11 @@ print(js[0])
 
 
 import csv
-with open('census_data_rank_1:'+str(N)+'.csv', 'w', newline='') as file:
+with open('census_name_data_rank_1:'+str(N)+'.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     
     # Writing the data into the file
     writer.writerows(js)
+
+
 
