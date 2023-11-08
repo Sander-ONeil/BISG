@@ -13,8 +13,8 @@ nheader = namedata[0,:]
 print(nheader)
 namedata = namedata[1:namedata.shape[0]]
 
-locdata = np.loadtxt('census_loc_data.csv',
-                 delimiter=",", dtype=str)
+locdata = np.loadtxt('census_loc_data_same_format.csv',
+                 delimiter=",", dtype=str)[1:,1:]
 print(locdata.shape)
 lheader = locdata[0,:]
 print(lheader)
@@ -23,7 +23,7 @@ locdata = locdata[1:locdata.shape[0]]
 print(locdata[:,8])
 
 n_i = np.argwhere(namedata[:,0] == surname)[0][0]
-l_i = np.argwhere(locdata[:,8] == zipcode)[0][0]
+l_i = np.argwhere(locdata[:,9] == zipcode)[0][0]
 
 
 print(n_i,l_i)
@@ -41,7 +41,7 @@ for h,n,l in zip(nheader,namedata[n_i],locdata[l_i]):
     
 
 Totals = np.array([["NAME","DP1_0076C","DP1_0084P","DP1_0080P","DP1_0082P","DP1_0079P","DP1_0093P","DP1_0078P","us"],
-["United States","331449281","10.2","1.1","0.2","12.4","18.7","61.6","1"]])
+["United States","331449281","4.08779979","0.67934949","6.10673734","12.05021108","18.72987741","57.83619335","1"]])
 
 
 Races = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7}
@@ -140,6 +140,7 @@ for x in Races.keys():
     Probs[x] = P
     Total_prob += P
     bad_Probs[x] = bad_method(p_a_giv_ev1,p_a_giv_ev2)
+print(Total_prob)
 
 import matplotlib.pyplot as plt
 
@@ -147,11 +148,11 @@ import matplotlib.pyplot as plt
 fig, axs = plt.subplots(1, 2, figsize=(12, 6))  # 1 row, 2 columns
 
 # First Pie chart for 'Probs'
-axs[0].pie(Probs.values(), labels=Probs.keys(), autopct='%1.1f%%', startangle=90)
+axs[0].pie(Probs.values(), labels=Probs.keys(), startangle=90)
 axs[0].set_title('Probs')
 
 # Second Pie chart for 'bad_Probs'
-axs[1].pie(bad_Probs.values(), labels=bad_Probs.keys(), autopct='%1.1f%%', startangle=90)
+axs[1].pie(bad_Probs.values(), labels=bad_Probs.keys(), startangle=90)
 axs[1].set_title('bad_Probs')
 
 # Adjust the layout to make room for the legend
