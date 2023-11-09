@@ -1,8 +1,8 @@
 import numpy as np
 
-surname = 'WASHINGTON'
+surname = 'washington'
 surname = surname.upper()
-zipcode = '10027'
+zipcode = '10475'
 
 # using loadtxt()
 N = 100000
@@ -44,10 +44,13 @@ Totals = np.array([["NAME","DP1_0076C","DP1_0084P","DP1_0080P","DP1_0082P","DP1_
 ["United States","331449281","4.08779979","0.67934949","6.10673734","12.05021108","18.72987741","57.83619335","1"]])
 
 
+
+
 Races = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7}
 
 
     
+
 
 def P_Race(p_a_giv_ev1,p_a_giv_ev2,p_ev1,p_ev2,p_a):
     # # Given probabilities
@@ -76,7 +79,8 @@ def P_Race(p_a_giv_ev1,p_a_giv_ev2,p_ev1,p_ev2,p_a):
     np_ev2_giv_a = (1-p_a_giv_ev2) * p_ev2 / (1-p_a)
     
     
-    p_name_and_location = 0.144/332
+    p_name_and_location = p_ev1*p_ev2
+    # p_name_and_location = 0.144/332
     
     # print(p_ev2)
     
@@ -99,7 +103,7 @@ def P_Race(p_a_giv_ev1,p_a_giv_ev2,p_ev1,p_ev2,p_a):
     
     # print('nprev',np_rev)
     
-    p_name_and_location = p_rev*p_a + np_rev*(1-p_a) #This could be found by itself just how many people are named smith and live in NY
+    # p_name_and_location = p_rev*p_a + np_rev*(1-p_a) #This could be found by itself just how many people are named smith and live in NY
     
     P = p_rev/p_name_and_location*p_a
 
@@ -110,12 +114,41 @@ def bad_method(p_a_giv_ev1,p_a_giv_ev2):
 
 Probs = {}
 bad_Probs = {}
-N = namedata[n_i]
-L = locdata[l_i]
-T = Totals[1]
-Total_prob = 0
-for x in Races.keys():
+
+T1 = 0
+for x in Races:
     i = Races[x]
+    T1 += float(namedata[n_i][i])
+    
+print('Totals T: ', T1)
+T1 = min(100,T1)
+N =  np.append(namedata[n_i],str(100-T1))
+
+
+T1 = 0
+for x in Races:
+    i = Races[x]
+    T1 += float(locdata[l_i][i])
+print('Totals T: ', T1)
+T1 = min(100,T1)
+L = np.append(locdata[l_i],str(100-T1))
+L[9] = str(100-T1)
+
+T1 = 0
+for x in Races:
+    i = Races[x]
+    T1 += float(Totals[1,i])
+print('Totals T: ', T1)
+T1 = min(100,T1)
+T = np.append(Totals[1],str(100-T1))
+print(T[9],L[9],N[9])
+Total_prob = 0
+
+
+# Races = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7,"Other":9}
+Races_with_other = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7,"Other":9}
+for x in Races_with_other.keys():
+    i = Races_with_other[x]
     p_a_giv_ev1 = float(L[i])/100
     print('Probability someone is ' + x + ' given they\'re from ' + L[0]+': ' + str(p_a_giv_ev1))
     p_a_giv_ev2 = float(N[i])/100
