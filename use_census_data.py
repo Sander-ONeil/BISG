@@ -2,7 +2,7 @@ import numpy as np
 
 surname = 'oneil'
 surname = surname.upper()
-zipcode = '14228'
+zipcode = '10475'
 
 # using loadtxt()
 N = 100000
@@ -51,125 +51,10 @@ Totals = np.array([["NAME","DP1_0076C","DP1_0084P","DP1_0080P","DP1_0082P","DP1_
 Races = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7}
 
 
-   
-def amount_of_people_with_name_in_loc(p_a_giv_ev1,p_a_giv_ev2,p_ev1,p_ev2,p_a):
-
-    p_ev1_giv_a = p_a_giv_ev1 * p_ev1 / p_a
-
-    # Compute the probability someone is from loc given they're not Race
-    np_ev1_giv_a = (1-p_a_giv_ev1) * p_ev1 / (1-p_a)
-    
-    
-    # Compute the probability someone is named name given they're Race
-    p_ev2_giv_a = (p_a_giv_ev2 * p_ev2) / (p_a)
-    np_ev2_giv_a = (1-p_a_giv_ev2) * p_ev2 / (1-p_a)
-    
-    
-    p_rev = p_ev1_giv_a*p_ev2_giv_a
-    np_rev = np_ev1_giv_a*np_ev2_giv_a
-
-    
-    return (p_rev*p_a+np_rev*(1-p_a))*331449281
- 
 
 
-def P_Race(p_a_giv_ev1,p_a_giv_ev2,p_ev1,p_ev2,p_a):
-    # # Given probabilities
-    # p_a_giv_ev1 = Probability someone is race given they're from loc
-    # p_a_giv_ev2 =  Probability someone is race given they're named name
-    # p_ev1 =  Prior probability someone is from loc
-    # p_ev2 =     Prior probability someone is named name
-    p_name_and_location = p_ev1*p_ev2
-    # Compute the probability someone is from loc given they're Race
-    p_ev1_giv_a = p_a_giv_ev1 * p_ev1 / p_a
-
-    # Compute the probability someone is from loc given they're not Race
-    np_ev1_giv_a = (1-p_a_giv_ev1) * p_ev1 / (1-p_a)
-    
-    
-    # Compute the probability someone is named name given they're Race
-    p_ev2_giv_a = (p_a_giv_ev2 * p_ev2) / (p_a)
-    np_ev2_giv_a = (1-p_a_giv_ev2) * p_ev2 / (1-p_a)
-    
-    # print('prob from loc ',p_ev1*331449281,'prob from loc and race',p_ev1_giv_a*331449281*p_a,'\n inv',(np_ev1_giv_a)*331449281*(1-p_a))
-    
-    
-    
-    
-    # print('prob name ',p_ev2*331449281,'prob from name and race',p_ev2_giv_a*331449281*p_a,'\n inv',(np_ev2_giv_a)*331449281*(1-p_a))
-    
-    
-    # prob that someone is named name and from loc given Race
-    p_rev = p_ev1_giv_a*p_ev2_giv_a
-    np_rev = np_ev1_giv_a*np_ev2_giv_a
-    
-    tot =p_rev*p_a +np_rev*(1-p_a)
-    print('tot',tot*331449281,p_name_and_location*331449281)
-    
-    p_rev /= tot / p_name_and_location
-    
-    np_rev /= tot / p_name_and_location
-    # print('prob from loc and name',p_name_and_location*331449281,'prob from loc name and race',p_rev*331449281*p_a,np_rev*331449281*(1-p_a))
-    tot =p_rev*p_a +np_rev*(1-p_a)
-    print('tot',tot*331449281,p_name_and_location*331449281)
-    
-    
-    # print('\n\nnew ',p_a_giv_ev1*p_a_giv_ev2*p_name_and_location*331449281,'\nold ',p_rev*331449281*p_a,'\ntotal ',p_name_and_location*331449281)
-    
-    # print('\n number of people with name in loc according to group',amount_of_people_with_name_in_loc(p_a_giv_ev1,p_a_giv_ev2,p_ev1,p_ev2,p_a))
-    
-    # p_rev = p_a_giv_ev1*p_a_giv_ev2*p_name_and_location/p_a
-    
-    #(p_rev*p_a+np_rev*(1-p_a)) = p_name_and_location
-    
-    #print('prob that someone is named name and from loc given Race',p_rev)
-    
-    
-    # 000,  N,  L,  NL,  R,  RN,  RL, RNL,
-    #   0   1   2    3   4    5    6    7
-    
-    # A = np.array([
-    #     [1,1,1,1,1,1,1,1],
-    #     [0,0,0,0,1,1,1,1],
-        
-    #     [0,0,1,1,0,0,1,1],
-    #     [0,1,0,1,0,1,0,1],
-        
-        
-    #     [0,0,0,0,0,0,1,1],
-    #     [0,0,0,0,0,1,0,1],
-        
-    #     [0,0,0,1,0,0,0,1],
-    #     [0,0,0,0,0,0,0,1],
-    #     ],dtype = np.float64)
-    
-    
-    
-    
-    P = p_rev*p_a/(p_rev*p_a+np_rev*(1-p_a))
-    
-    # B = np.array([
-    #     331449281,
-    #     p_a*331449281,
-        
-    #     p_ev1*331449281,
-    #     p_ev2*331449281,
-        
-        
-    #     p_ev1_giv_a*p_a*331449281,
-    #     p_ev2*331449281*p_a_giv_ev2,
-        
-    #     331449281*p_name_and_location,
-    #     p_name_and_location*331449281*P,
-    #     ],dtype = np.float64)
-    # G = np.dot(np.linalg.inv(A),B)
-    
-    # print(np.dot(np.linalg.inv(A),B))
-    
-    return P
-
-def bad_method(p_a_giv_ev1,p_a_giv_ev2):
-    return (p_a_giv_ev1+p_a_giv_ev2)/2
+def bad_method(p_race_giv_loc,p_race_giv_name):
+    return (p_race_giv_loc+p_race_giv_name)/2
 
 Probs = {}
 bad_Probs = {}
@@ -201,48 +86,79 @@ print('Totals T: ', T1)
 T1 = min(100,T1)
 T = np.append(Totals[1],str(100-T1))
 print(T[9],L[9],N[9])
-Total_prob = 0
-people_with_name = 0
 
-# Races = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7,"Other":9}
-Races_with_other = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7,"Other":9}
-for x in Races_with_other.keys():
-    print('\n\n')
-    print(x,'\n')
-    i = Races_with_other[x]
-    p_a_giv_ev1 = float(L[i])/100
-    # print('Probability someone is ' + x + ' given they\'re from ' + L[0]+': ' + str(p_a_giv_ev1))
-    p_a_giv_ev2 = float(N[i])/100
-    # print('Probability someone is ' + x + ' given they\'re named ' + N[0]+': ' + str(p_a_giv_ev2))
-    p_ev1 = float(L[1]) / float(T[1])
-    # print('Probability someone is from ' + L[0] + " :" + str(p_ev1))
-    p_ev2 =float( N[1]) / float(T[1])
-    # print('Probability someone is Named ' + N[0] + " :" + str(p_ev2))
+
+
+# # Given probabilities
+# p_race_giv_loc = Probability someone is race given they're from loc
+# p_race_giv_name =  Probability someone is race given they're named name
+# p_loc = Prior probability someone is from loc
+# p_name = Prior probability someone is named name
+
+
+def part_of_total(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_race):
+    # Compute the probability someone is from loc given they're Race
+    p_loc_giv_race = p_race_giv_loc * p_loc / p_race
+
+    # Compute the probability someone is named name given they're Race
+    p_name_giv_race = (p_race_giv_name * p_name) / (p_race)
+
+    #(ESTIMATE) prob that someone is named name and from loc given Race
+    p_nameandloc_giv_race = p_loc_giv_race*p_name_giv_race
     
+    return p_nameandloc_giv_race*p_race
+
+
+def P_Race(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_race,p_nameANDlocation):
+
+    # Compute the probability someone is from loc given they're Race
+    p_loc_giv_race = p_race_giv_loc * p_loc / p_race
+
+    # Compute the probability someone is named name given they're Race
+    p_name_giv_race = (p_race_giv_name * p_name) / (p_race)
+    
+    #(ESTIMATE) prob that someone is named name and from loc given Race
+    p_nameandloc_giv_race = p_loc_giv_race*p_name_giv_race
+    
+    # Final propability that someone is the race given they are from loc and have name
+    P_race_giv_nameandloc = p_nameandloc_giv_race*p_race/p_nameANDlocation
+    
+    return P_race_giv_nameandloc
+
+Total_prob = 0
+
+
+Races_with_other = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7,"Other":9}
+
+p_nameANDlocation = 0
+
+for x in Races_with_other.keys():
+    i = Races_with_other[x]
+    p_race_giv_loc = float(L[i])/100
+    p_race_giv_name = float(N[i])/100
+    p_loc = float(L[1]) / float(T[1])
+    p_name =float( N[1]) / float(T[1])
     p_a = float(T[i]) / 100
     
-    # print('Probability someone is ' + x + " :" + str(p_a))
-    # p_a_giv_ev1 = Probability someone is race given they're from loc
-    # p_a_giv_ev2 =  Probability someone is race given they're named name
-    # p_ev1 =  Prior probability someone is from loc
-    # p_ev2 =  Prior probability someone is named name
-    P = P_Race(p_a_giv_ev1,p_a_giv_ev2,p_ev1,p_ev2,p_a)
-    
-    # print('\n Probability someone is ' + x + 'given both '+str(P))
-    
-    
-    nP = P_Race(1-p_a_giv_ev1,1-p_a_giv_ev2,p_ev1,p_ev2,1-p_a)
-    # print('inv probs',1-p_a_giv_ev1,1-p_a_giv_ev2,p_ev1,p_ev2,1-p_a)
-    
-    print('prob and rev',P,'  :  ',nP,' = ',P+nP)
-    Probs[x] = P
-    Total_prob += P
-    bad_Probs[x] = bad_method(p_a_giv_ev1,p_a_giv_ev2)
-    
-    people_with_name += P*amount_of_people_with_name_in_loc(p_a_giv_ev1,p_a_giv_ev2,p_ev1,p_ev2,p_a)
+    p_nameANDlocation += part_of_total(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_a)
 
-print('people with name simple',p_ev1*p_ev2*331449281)
-print('people_With_name',people_with_name,people_with_name/Total_prob)
+
+for x in Races_with_other.keys():
+    i = Races_with_other[x]
+    p_race_giv_loc = float(L[i])/100
+    p_race_giv_name = float(N[i])/100
+    p_loc = float(L[1]) / float(T[1])
+    p_name =float( N[1]) / float(T[1])
+    p_a = float(T[i]) / 100
+ 
+    P = P_Race(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_a,p_nameANDlocation)
+    Probs[x] = P
+    
+    Total_prob += P
+    bad_Probs[x] = bad_method(p_race_giv_loc,p_race_giv_name)
+
+
+
 print('probs',Probs)
 print('Total prob',Total_prob)
 
