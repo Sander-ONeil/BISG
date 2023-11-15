@@ -1,11 +1,13 @@
 import numpy as np
+import os
 
+# data of person to examine
 surname = 'meehan'
 surname = surname.upper()
 zipcode = '00601'
 
-import os
 
+#loading data from csv into numpy
 def load_data(file_name):
     data = np.loadtxt(file_name, delimiter=",", dtype=str)
     return data
@@ -14,14 +16,16 @@ namedata = load_data('census_name_data_rank_1_100000.csv')
 nheader = namedata[0,:]
 namedata = namedata[1:namedata.shape[0]]
 
+# this data is wierdly formatted so it takes of first column and row; could solve but would have to change multiple files in github
 locdata = load_data('census_loc_data_same_format.csv')[1:,1:]
 lheader = locdata[0,:]
 locdata = locdata[1:locdata.shape[0]]
 
+# total data for US
 Totals = np.array([["NAME","DP1_0076C","DP1_0084P","DP1_0080P","DP1_0082P","DP1_0079P","DP1_0093P","DP1_0078P","us"],
 ["United States","331449281","4.08779979","0.67934949","6.10673734","12.05021108","18.72987741","57.83619335","1"]])
 
-#searching for relevant entries
+# searching for relevant entries according to personal data
 n_i = np.argwhere(namedata[:,0] == surname)[0][0]
 l_i = np.argwhere(locdata[:,8] == zipcode)[0][0]
 
@@ -48,6 +52,7 @@ L, other_L = calculate_others(locdata[l_i])
 T, other_T = calculate_others(Totals[1])
 
 Races_with_other = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7,"Other":9}
+# printing given race data for Name Loc  and Total, could make this more pie charts
 s1 = 'Race'
 s2 = 'Name'
 s3 = 'Loc'
@@ -64,6 +69,8 @@ for h in Races_with_other:
 # p_race_giv_name =  Probability someone is race given they're named name
 # p_loc = Prior probability someone is from loc
 # p_name = Prior probability someone is named name
+
+# niave approach
 def bad_method(p_race_giv_loc,p_race_giv_name):
     return (p_race_giv_loc+p_race_giv_name)/2
 
@@ -77,6 +84,7 @@ def p_namelocandrace(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_race):
     #(ESTIMATE) prob that someone is named name and from loc given Race
     p_nameandloc_giv_race = p_loc_giv_race*p_name_giv_race
     
+    # returns prob of being of race in loc and having name
     return p_nameandloc_giv_race*p_race
 
 p_nameANDlocation = 0
@@ -87,13 +95,20 @@ p_namelocandrace_dict = {}
 p_loc = float(L[1]) / float(T[1])
 p_name =float( N[1]) / float(T[1])
 
+# loop through races including "other"
 for x in Races_with_other.keys():
     i = Races_with_other[x]
+
+    # get probs for race
     p_race_giv_loc = float(L[i]) / 100
     p_race_giv_name = float(N[i]) / 100
     p_race = float(T[i]) / 100
+
+    # get prob of being race in loc and with name
     p_namelocandrace_dict[x] =  p_namelocandrace(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_race)
+    # add to total
     p_nameANDlocation += p_namelocandrace_dict[x]
+    # get niave approach
     bad_Probs[x] = bad_method(p_race_giv_loc,p_race_giv_name)
 
 for x in Races_with_other.keys():
@@ -105,21 +120,50 @@ for x in Races_with_other.keys():
 print('probs',Probs)
 print('Total prob',Total_prob)
 
+#plotting BISG results vs niave approach
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 
-# Creating a figure for the subplot
-fig, axs = plt.subplots(1, 2, figsize=(12, 6))  # 1 row, 2 columns
+# Create a figure with custom GridSpec for flexible subplot sizes
+fig = plt.figure(figsize=(14, 8))
+gs = gridspec.GridSpec(3, 2, figure=fig,width_ratios=[1, 2], height_ratios=[1, 1, 1])
 
-# First Pie chart for 'Probs'
-axs[0].pie(Probs.values(), labels=Probs.keys(), startangle=90)
-axs[0].set_title('Probs')
+# Define the axes
+ax1 = fig.add_subplot(gs[0:2, 1])  # Probs pie (larger)
+ax2 = fig.add_subplot(gs[2, 1])  # bad_Probs pie
+ax3 = fig.add_subplot(gs[0, 0])  # Surname racial breakdown
+ax4 = fig.add_subplot(gs[1, 0])  # Zipcode racial breakdown
+ax5 = fig.add_subplot(gs[2, 0])  # US total racial breakdown
 
-# Second Pie chart for 'bad_Probs'
-axs[1].pie(bad_Probs.values(), labels=bad_Probs.keys(), startangle=90)
-axs[1].set_title('bad_Probs')
+colors = [ "#d62728", "#9467bd", "#ff7f0e", "#000000", "#1f77b4", "#c9bfbf", "#17becf"]
+Races_with_other = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7,"Other":9}
 
-# Adjust the layout to make room for the legend
-plt.tight_layout()
+
+# Probs pie (larger)
+probs_pie = ax1.pie(Probs.values(), colors=colors)
+ax1.set_title('Probs BISG approach')
+
+# bad_Probs pie
+bad_probs_pie = ax2.pie(bad_Probs.values(), colors=colors)
+ax2.set_title('bad_Probs Naive Approach')
+
+# Given Data pies
+race_ind = list(Races_with_other.values())
+surname_pie = ax3.pie(N[race_ind], colors=colors)
+ax3.set_title(surname + ' racial breakdown')
+
+zipcode_pie = ax4.pie(L[race_ind], colors=colors)
+ax4.set_title(zipcode + ' racial breakdown')
+
+us_total_pie = ax5.pie(T[race_ind], colors=colors)
+ax5.set_title('US total racial breakdown')
+
+# Add a single legend for all pie charts
+plt.figlegend(probs_pie[0], Races_with_other.keys(), loc='center right',)
+
+# Adjust the layout to accommodate the legend and ensure no overlap
+# fig.tight_layout()
+fig.subplots_adjust(right=0.85)
 
 # Display the plot
 plt.show()
