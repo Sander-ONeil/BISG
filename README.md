@@ -6,4 +6,4 @@ In order to use python implementation download use_census_data.py aswell as cens
 
 or just download everything and run use_census_data.py
 
-other python files are used to download the datasets and clean the data
+download_and_clean_data.py used to download the datasets and clean the data
