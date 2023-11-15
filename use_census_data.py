@@ -4,17 +4,21 @@ surname = 'oneil'
 surname = surname.upper()
 zipcode = '10475'
 
-# using loadtxt()
-N = 100000
-namedata = np.loadtxt('census_data_rank_1:100000.csv',
-                 delimiter=",", dtype=str)
+import os
+
+def load_data(file_name):
+    data = np.loadtxt(file_name, delimiter=",", dtype=str)
+    return data
+
+file_name ='census_name_data_rank_1_100000.csv'
+namedata = load_data(file_name)
+
 print(namedata.shape)
 nheader = namedata[0,:]
 print(nheader)
 namedata = namedata[1:namedata.shape[0]]
 
-locdata = np.loadtxt('census_loc_data_same_format.csv',
-                 delimiter=",", dtype=str)[1:,1:]
+locdata = load_data('census_loc_data_same_format.csv')[1:,1:]
 print(locdata.shape)
 lheader = locdata[0,:]
 print(lheader)
@@ -23,7 +27,7 @@ locdata = locdata[1:locdata.shape[0]]
 print(locdata[:,8])
 
 n_i = np.argwhere(namedata[:,0] == surname)[0][0]
-l_i = np.argwhere(locdata[:,9] == zipcode)[0][0]
+l_i = np.argwhere(locdata[:,8] == zipcode)[0][0]
 
 N = namedata[n_i]
 N[N=='(S)'] = '0'
@@ -96,7 +100,7 @@ print(T[9],L[9],N[9])
 # p_name = Prior probability someone is named name
 
 
-def part_of_total(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_race):
+def p_namelocandrace(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_race):
     # Compute the probability someone is from loc given they're Race
     p_loc_giv_race = p_race_giv_loc * p_loc / p_race
 
@@ -111,23 +115,12 @@ def part_of_total(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_race):
 
 def P_Race(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_race,p_nameANDlocation):
 
-    # Compute the probability someone is from loc given they're Race
-    p_loc_giv_race = p_race_giv_loc * p_loc / p_race
-
-    # Compute the probability someone is named name given they're Race
-    p_name_giv_race = (p_race_giv_name * p_name) / (p_race)
-    
-    #(ESTIMATE) prob that someone is named name and from loc given Race
-    p_nameandloc_giv_race = p_loc_giv_race*p_name_giv_race
-    
     # Final propability that someone is the race given they are from loc and have name
-    P_race_giv_nameandloc = p_nameandloc_giv_race*p_race/p_nameANDlocation
+    P_race_giv_nameandloc = p_namelocandrace(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_race)/p_nameANDlocation
     
     return P_race_giv_nameandloc
 
 Total_prob = 0
-
-
 Races_with_other = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7,"Other":9}
 
 p_nameANDlocation = 0
@@ -140,7 +133,7 @@ for x in Races_with_other.keys():
     p_name =float( N[1]) / float(T[1])
     p_a = float(T[i]) / 100
     
-    p_nameANDlocation += part_of_total(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_a)
+    p_nameANDlocation += p_namelocandrace(p_race_giv_loc,p_race_giv_name,p_loc,p_name,p_a)
 
 
 for x in Races_with_other.keys():
