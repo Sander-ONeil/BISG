@@ -1,3 +1,26 @@
+import pandas as pd
+import numpy as np
+fnamedata = np.array(pd.read_excel('firstnames.xlsx', sheet_name='Data'))
+print(fnamedata)
+
+
+empty = np.zeros((fnamedata.shape[0]+1,9),dtype = 'U25')
+
+empty[1:,0] = fnamedata[:,0] 
+empty[1:,1] = fnamedata[:,1]
+empty[1:,2] = fnamedata[:,7]
+empty[1:,3] = fnamedata[:,6]
+empty[1:,4] = fnamedata[:,5]
+empty[1:,5] = fnamedata[:,4]
+empty[1:,6] = fnamedata[:,2]
+empty[1:,7] = fnamedata[:,3]
+empty[1:,8] = fnamedata[:,0]
+#          firstname  obs  pcthispanic  pctwhite  pctblack  pctapi  pctaian  pct2prace
+empty[0] = ['NAME','COUNT','PCT2PRACE','PCTAIAN','PCTAPI','PCTBLACK','PCTHISPANIC','PCTWHITE','NAME']
+
+# Now that numpy is imported, let's save the data array to a CSV file again
+np.savetxt('fnamedata.csv',empty, delimiter=",", fmt='%s')
+
 import requests
 
 
@@ -32,7 +55,6 @@ response = requests.get(url)
 js = response.json()
 print(js[0])
 
-import numpy as np
 L = np.array(js)
 
 datapoints = {
@@ -62,7 +84,6 @@ with open('census_loc_data.csv', 'w', newline='') as file:
     writer.writerows(js[1:len(js)])
     
 
-import numpy as np
 locdata = np.loadtxt('census_loc_data.csv',
                  delimiter=",", dtype=str)
                  
@@ -99,9 +120,6 @@ empty[0] = ['NAME','COUNT','PCT2PRACE','PCTAIAN','PCTAPI','PCTBLACK','PCTHISPANI
 
 empty = empty.astype(str)
 
-import pandas as pd
-import numpy as np
- 
 
 # convert array into dataframe
 DF = pd.DataFrame(empty)
