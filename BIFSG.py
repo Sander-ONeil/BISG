@@ -1,6 +1,4 @@
 import numpy as np
-import os
-
 
 # data of person to examine
 fname = 'penelope'
@@ -31,6 +29,7 @@ fheader = fnamedata[0,:]
 fnamedata = fnamedata[1:fnamedata.shape[0]]
 total_fname_count = np.sum(fnamedata[:,1].astype(float))
 print(fnamedata.shape)
+print(total_fname_count) #name count lower than total pop significantly. Should use this to get prob I think, depends if its representative sample, if every instance of these names are counted then could divide by us pop
 
 # total data for US
 Totals = np.array([["NAME","DP1_0076C","DP1_0084P","DP1_0080P","DP1_0082P","DP1_0079P","DP1_0093P","DP1_0078P","us"],
@@ -151,10 +150,10 @@ gs = gridspec.GridSpec(4, 2, figure=fig,width_ratios=[1, 2], height_ratios=[1, 1
 # Define the axes
 ax1 = fig.add_subplot(gs[0:2, 1])  # Probs pie (larger)
 ax2 = fig.add_subplot(gs[2, 1])  # bad_Probs pie
-ax3 = fig.add_subplot(gs[0, 0])  # Surname racial breakdown
-ax4 = fig.add_subplot(gs[1, 0])  # Zipcode racial breakdown
-ax5 = fig.add_subplot(gs[2, 0])  # US total racial breakdown
-ax6 = fig.add_subplot(gs[3, 0])  # First name racial breakdown
+ax3 = fig.add_subplot(gs[1, 0])  # Surname racial breakdown
+ax4 = fig.add_subplot(gs[2, 0])  # Zipcode racial breakdown
+ax5 = fig.add_subplot(gs[3, 0])  # US total racial breakdown
+ax6 = fig.add_subplot(gs[0, 0])  # First name racial breakdown
  
 colors = [ "#d62728", "#9467bd", "#ff7f0e", "#000000", "#1f77b4", "#c9bfbf", "#17becf"]
 Races_with_other = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7,"Other":9}
