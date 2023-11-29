@@ -65,12 +65,5 @@ for x in races:
 
 sampledata = np.column_stack((F,L,N))
 
-# print(sampledata)
-# empty = sampledata.astype(str)
 
-import pandas as pd
-# convert array into dataframe
-DF = pd.DataFrame(sampledata)
-    
-# save the dataframe as a csv file
-DF.to_csv("./testdata.csv")
+np.savetxt('testdata.csv',sampledata, delimiter=",", fmt='%s')
