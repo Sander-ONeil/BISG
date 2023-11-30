@@ -1,5 +1,5 @@
 import numpy as np
-
+import os
 # data of person to examine
 fname = 'penelope'
 fname = fname.upper()
@@ -11,7 +11,7 @@ zipcode = '10475'
 
 #loading data from csv into numpy
 def load_data(file_name):
-    data = np.loadtxt(file_name, delimiter=",", dtype=str)
+    data = np.loadtxt(os.path.dirname(os.path.abspath(__file__))+'/'+file_name, delimiter=",", dtype=str)
     return data
 
 namedata = load_data('census_name_data_rank_1_100000.csv')
@@ -38,12 +38,12 @@ Totals = np.array([["NAME","DP1_0076C","DP1_0084P","DP1_0080P","DP1_0082P","DP1_
 
 
 def sortbycount(data,i = 1):
-    ind = np.argsort(-data[:,i].astype(float), axis=0)
+    ind = np.argsort(-(data[:,i].astype(float)**2)*data[:,1].astype(float), axis=0)
     return data[ind]
 
-n = 10
+n = 30
 
-F = sortbycount(fnamedata)[:n,0]
+F = sortbycount(fnamedata[:-1])[:n,0]
 L = sortbycount(locdata)[:n,8]
 N = sortbycount(namedata)[:n,0]
 
@@ -53,12 +53,12 @@ races = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Bla
 
 for x in races:
     i = races[x]
-    F1 = sortbycount(fnamedata,i)
+    F1 = sortbycount(fnamedata[0:-1],i)
     L1 = sortbycount(locdata,i)
     N1 = sortbycount(namedata,i)
-    F = np.append(F,F1[:3,0])
-    L = np.append(L,L1[:3,8])
-    N = np.append(N,N1[:3,0])
+    F = np.append(F,F1[:5,0])
+    L = np.append(L,L1[:5,8])
+    N = np.append(N,N1[:5,0])
     
     print(x)
     print(F1[:3,0],N1[:3,0],L1[:3,0])
@@ -66,4 +66,4 @@ for x in races:
 sampledata = np.column_stack((F,L,N))
 
 
-np.savetxt('testdata.csv',sampledata, delimiter=",", fmt='%s')
+np.savetxt(os.path.dirname(os.path.abspath(__file__))+'/'+'testdata.csv',sampledata, delimiter=",", fmt='%s')
