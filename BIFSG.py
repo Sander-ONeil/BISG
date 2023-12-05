@@ -33,17 +33,17 @@ def BISFG_func(fname,surname,zipcode,plot = True):
     F, other_F = calculate_others(fnamedata[f_i])
     
     Races_with_other = {"2 Races":2,"Alaskan/American Native":3,"Asian/Pacific Islander":4,"Black":5,"Hispanic":6,"White":7,"Other":9}
-    # printing given race data for Name Loc  and Total, could make this more pie charts
+    # #printing given race data for Name Loc  and Total, could make this more pie charts
     s1 = 'Race'
     s2 = 'Name'
     s3 = 'Loc'
     s4 = 'US total'
-    print('\n',s1,' '*(30-len(s1)),s2,' '*(30-len(s2)),s3,' '*(30-len(s3)),s4)
+    #print('\n',s1,' '*(30-len(s1)),s2,' '*(30-len(s2)),s3,' '*(30-len(s3)),s4)
     for h in Races_with_other:
         i = Races_with_other[h]
         n,l,t = (N[i],L[i],T[i])
     
-        print(h,' '*(30-len(h)),n,' '*(30-len(n)),l,' '*(30-len(l)),t)
+        #print(h,' '*(30-len(h)),n,' '*(30-len(n)),l,' '*(30-len(l)),t)
     
     # # Given probabilities
     # p_race_giv_loc = Probability someone is race given they're from loc
@@ -57,7 +57,7 @@ def BISFG_func(fname,surname,zipcode,plot = True):
     
     def p_namelocandrace(p_race_giv_loc,p_race_giv_name,p_race_giv_fname,p_loc,p_name,p_fname,p_race):
         # Compute the probability someone is from loc given they're Race
-        p_loc_giv_race = p_race_giv_loc * p_loc / p_race
+        p_loc_giv_race = (p_race_giv_loc * p_loc / p_race)
     
         # Compute the probability someone is named name given they're Race
         p_name_giv_race = (p_race_giv_name * p_name) / (p_race)
@@ -82,12 +82,14 @@ def BISFG_func(fname,surname,zipcode,plot = True):
     # loop through races including "other"
     for x in Races_with_other.keys():
         i = Races_with_other[x]
-    
-        # get probs for race
-        p_race_giv_loc = float(L[i]) / 100
-        p_race_giv_name = float(N[i]) / 100
-        p_race_giv_fname =  float(F[i]) / 100
+        
         p_race = float(T[i]) / 100
+        
+        # get probs for race
+        p_race_giv_loc = float(L[i]) / 100+0.0000001
+        p_race_giv_name = float(N[i]) / 100+0.0000001
+        p_race_giv_fname =  float(F[i]) / 100+0.0000001
+        
     
     
         # get prob of being race in loc and with name
@@ -103,8 +105,8 @@ def BISFG_func(fname,surname,zipcode,plot = True):
         Probs[x] = P
         Total_prob += P
 
-    print('probs',Probs)
-    print('Total prob',Total_prob)
+    #print('probs',Probs)
+    # print('Total prob',Total_prob)
     
     if plot:
         #plotting BISG results vs niave approach
@@ -183,8 +185,8 @@ fnamedata = load_data('fnamedata.csv')
 fheader = fnamedata[0,:]
 fnamedata = fnamedata[1:fnamedata.shape[0]]
 total_fname_count = np.sum(fnamedata[:,1].astype(float))
-print(fnamedata.shape)
-print(total_fname_count) #name count lower than total pop significantly. Should use this to get prob I think, depends if its representative sample, if every instance of these names are counted then could divide by us pop
+#print(fnamedata.shape)
+#print(total_fname_count) #name count lower than total pop significantly. Should use this to get prob I think, depends if its representative sample, if every instance of these names are counted then could divide by us pop
 
 # total data for US
 Totals = np.array([["NAME","DP1_0076C","DP1_0084P","DP1_0080P","DP1_0082P","DP1_0079P","DP1_0093P","DP1_0078P","us"],
@@ -193,17 +195,14 @@ Totals = np.array([["NAME","DP1_0076C","DP1_0084P","DP1_0080P","DP1_0082P","DP1_
 
 
 # data of person to examine
-fname = 'penelope'
-# fname = 'MICHAEL'
-# fname = 'CHEYENNE'
-# fname = 'JELENA'
+fname = 'RYAN'
 fname = fname.upper()
-surname = 'smith'
+surname = 'pRICE'
 # surname = 'ARREZ'
 surname = surname.upper()
 
-zipcode = '10475'
+zipcode = '14204'
 # zipcode = '35185'
 
-Probs,bad_Probs = BISFG_func(fname,surname,zipcode,plot = False)
+Probs,bad_Probs = BISFG_func(fname,surname,zipcode,plot = True)
 g_mas_order = ['White','Black','API','AIAN','Multi','Hisp','Other']
