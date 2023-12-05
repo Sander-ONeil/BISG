@@ -132,5 +132,5 @@ only_WN = WN - WSN
 only_SN = SN - WSN
 
 # Create Venn diagram
-venn3(subsets=(S, N, SN, W, WS, WN, WSN), set_labels=('Smith', 'NY', 'White'))
+venn3(subsets=(round(S),round( N),round( SN),round( W),round( WS),round( WN),round( WSN)), set_labels=('Smith', 'NY', 'White'))
 plt.show()

@@ -81,7 +81,7 @@ def confusion(T, P,title='None'):
     
     
     # Plot for each race
-    fig, axs = plt.subplots(1, 7, figsize=(30, 10))  # Adjust the layout as needed
+    fig, axs = plt.subplots(4, 2, figsize=(10, 20))  # Adjust the layout as needed
     axs = axs.flatten()
     
     for x, r in enumerate(races):

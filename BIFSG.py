@@ -57,13 +57,13 @@ def BISFG_func(fname,surname,zipcode,plot = True,correcting = False):
     
     def p_namelocandrace(p_race_giv_loc,p_race_giv_name,p_race_giv_fname,p_loc,p_name,p_fname,p_race):
         # Compute the probability someone is from loc given they're Race
-        p_loc_giv_race = (p_race_giv_loc * p_loc / p_race)
+        p_loc_giv_race = p_race_giv_loc * p_loc / p_race
     
         # Compute the probability someone is named name given they're Race
-        p_name_giv_race = (p_race_giv_name * p_name) / (p_race)
+        p_name_giv_race = p_race_giv_name * p_name / p_race
     
         # Compute the probability someone is fnamed fname given they're Race
-        p_fname_giv_race = p_race_giv_fname * p_fname / (p_race)
+        p_fname_giv_race = p_race_giv_fname * p_fname / p_race
     
         #(ESTIMATE) prob that someone is named name and from loc given Race
         p_nameandloc_giv_race = p_loc_giv_race*p_name_giv_race*p_fname_giv_race
@@ -86,14 +86,14 @@ def BISFG_func(fname,surname,zipcode,plot = True,correcting = False):
         p_race = float(T[i]) / 100
         
         # get probs for race
-        p_race_giv_loc = float(L[i]) / 100+0.0000001
-        p_race_giv_name = float(N[i]) / 100+0.0000001
-        p_race_giv_fname =  float(F[i]) / 100+0.0000001
+        p_race_giv_loc = float(L[i]) / 100
+        p_race_giv_name = float(N[i]) / 100
+        p_race_giv_fname =  float(F[i]) / 100
         
-    
-    
         # get prob of being race in loc and with name
-        p_namelocandrace_dict[x] =  p_namelocandrace(p_race_giv_loc,p_race_giv_name,p_race_giv_fname,p_loc,p_name,p_fname,p_race)
+        p_namelocandrace_dict[x] =  p_namelocandrace(
+            p_race_giv_loc,p_race_giv_name,p_race_giv_fname,p_loc,p_name,p_fname,p_race)
+        
         # add to total
         p_nameANDlocation += p_namelocandrace_dict[x]
         # get niave approach
@@ -200,14 +200,12 @@ Totals = np.array([["NAME","DP1_0076C","DP1_0084P","DP1_0080P","DP1_0082P","DP1_
 
 
 # data of person to examine
-fname = 'RYAN'
+
+fname = 'mohammed'
 fname = fname.upper()
-surname = 'pRICE'
-# surname = 'ARREZ'
+surname = 'lee'
 surname = surname.upper()
 
 zipcode = '14204'
-# zipcode = '35185'
 
 Probs,bad_Probs = BISFG_func(fname,surname,zipcode,plot = True)
-g_mas_order = ['White','Black','API','AIAN','Multi','Hisp','Other']
