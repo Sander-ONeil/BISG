@@ -1,7 +1,14 @@
 from BIFSG import *
 
 Probs,bad_Probs = BISFG_func(fname,surname,zipcode,plot = False)
+
+
+
+
 g_mas_order = ['White','Black','API','AIAN','Multi','Hisp','Other']
+
+
+
 Races = {"2 Races":4,"Alaskan/American Native":3,"Asian/Pacific Islander":2,"Black":1,"Hispanic":5,"White":0,"Other":6}
         
 
@@ -132,8 +139,8 @@ print('sum of error worst: ',np.sum(Worst))
 print('sum of error bad: ',np.sum(distB))
 print('sum of error: ',np.sum(distP))
 
-C = confusion(Pvector,tvector, 'BIFSG method')
-Cb = confusion(Bvector,tvector,'Bad Pred')
+#C = confusion(Pvector,tvector, 'BIFSG method')
+#Cb = confusion(Bvector,tvector,'Bad Pred')
 plt.show()
 #print(C)
 
@@ -165,7 +172,7 @@ print('bad method ', np.sum((B == T)), 'out of ', np.sum((B == T)==False) + np.s
 
 print('worst method ', np.sum((W == T)), 'out of ', np.sum((W == T)==False) + np.sum((W == T)))
 
-total_prob =  [np.sum(tvector,axis = 0),np.sum(Pvector,axis = 0),np.sum(Bvector,axis = 0)+np.sum(Worst,axis=0)]
+total_prob =  [np.sum(tvector,axis = 0),np.sum(Pvector,axis = 0),np.sum(Bvector,axis = 0),np.sum(Worst,axis=0)]
 
 for t in range(len(total_prob)):
 
@@ -204,4 +211,31 @@ plt.xticks([r + barWidth for r in range(len(total_prob[0]))],
         races)
  
 plt.legend()
+plt.show()
+
+total = np.array([57.83619335,12.05021108,6.10673734,0.67934949,4.08779979,18.72987741,.01])
+
+
+X = np.arange(-100,200)
+Y = np.zeros((300))
+print(X.shape,Y.shape)
+i = 0
+for x in range(-100,200):
+    x = x/100
+    
+
+    Pvector2 = Pvector / ((total)**x)
+    
+    P = np.argmax(Pvector2, axis=1)
+    print(np.sum((P == T)), 'out of ', np.sum((P == T)==False) + np.sum((P == T)))
+    
+    Y[i] = np.sum((P == T))/(np.sum((P == T)==False) + np.sum((P == T)))
+    i+=1
+    
+
+plt.scatter(X/100,Y)
+plt.xlabel('Exponent')
+plt.ylabel('Accuracy')
+
+plt.title('Dividing by significance (Total US racial breakdown)')
 plt.show()
