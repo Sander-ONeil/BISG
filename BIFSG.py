@@ -1,7 +1,7 @@
 import numpy as np
 import os
 
-def BISFG_func(fname,surname,zipcode,plot = True):
+def BISFG_func(fname,surname,zipcode,plot = True,correcting = False):
     # searching for relevant entries according to personal data
     n_i = np.argwhere(namedata[:,0] == surname)[0][0]
     l_i = np.argwhere(locdata[:,8] == zipcode)[0][0]
@@ -103,8 +103,13 @@ def BISFG_func(fname,surname,zipcode,plot = True):
         # Final propability that someone is the race given they are from loc and have name
         P = p_namelocandrace_dict[x]/p_nameANDlocation
         Probs[x] = P
+        
+        if correcting:
+            Probs[x] /= (float(T[Races_with_other[x]]) / 100 )**.5
+            
+        
         Total_prob += P
-
+    #Probs['White'] *= .45
     #print('probs',Probs)
     # print('Total prob',Total_prob)
     
