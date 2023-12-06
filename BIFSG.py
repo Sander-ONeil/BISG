@@ -52,8 +52,8 @@ def BISFG_func(fname,surname,zipcode,plot = True,correcting = False):
     # p_name = Prior probability someone is named name
     
     # niave approach
-    def bad_method(p_race_giv_loc,p_race_giv_name):
-        return (p_race_giv_loc+p_race_giv_name)/2
+    def bad_method(p_race_giv_loc,p_race_giv_name,p_race_giv_fname):
+        return (p_race_giv_loc+p_race_giv_name+p_race_giv_fname)/3
     
     def p_namelocandrace(p_race_giv_loc,p_race_giv_name,p_race_giv_fname,p_loc,p_name,p_fname,p_race):
         # Compute the probability someone is from loc given they're Race
@@ -86,9 +86,9 @@ def BISFG_func(fname,surname,zipcode,plot = True,correcting = False):
         p_race = float(T[i]) / 100
         
         # get probs for race
-        p_race_giv_loc = float(L[i]) / 100
-        p_race_giv_name = float(N[i]) / 100
-        p_race_giv_fname =  float(F[i]) / 100
+        p_race_giv_loc = float(L[i]) / 100 + 0.001
+        p_race_giv_name = float(N[i]) / 100 + 0.001
+        p_race_giv_fname =  float(F[i]) / 100 + 0.001
         
         # get prob of being race in loc and with name
         p_namelocandrace_dict[x] =  p_namelocandrace(
@@ -97,7 +97,7 @@ def BISFG_func(fname,surname,zipcode,plot = True,correcting = False):
         # add to total
         p_nameANDlocation += p_namelocandrace_dict[x]
         # get niave approach
-        bad_Probs[x] = bad_method(p_race_giv_loc,p_race_giv_name)
+        bad_Probs[x] = bad_method(p_race_giv_loc,p_race_giv_name,p_race_giv_fname)
     
     for x in Races_with_other.keys():
         # Final propability that someone is the race given they are from loc and have name
