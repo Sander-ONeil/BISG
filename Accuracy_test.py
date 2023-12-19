@@ -163,11 +163,54 @@ for w in wrong:
     #print(Tdata[w+1][2],end = ', ')
     
     
-    
+
 print('correct' , Y , ' out of ', Y+N)
 print('bad method ', np.sum((B == T)), 'out of ', np.sum((B == T)==False) + np.sum((B == T)))
-
 print('worst method ', np.sum((W == T)), 'out of ', np.sum((W == T)==False) + np.sum((W == T)))
+
+
+
+
+
+
+#plotting BISG results vs niave approach
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+
+# Create a figure with custom GridSpec for flexible subplot sizes
+fig = plt.figure(figsize=(14, 8))
+gs = gridspec.GridSpec(1, 3, figure=fig,width_ratios=[1, 1, 1,], height_ratios=[1,])
+
+# Define the axes
+ax1 = fig.add_subplot(gs[0, 0])  # Probs pie (larger)
+ax2 = fig.add_subplot(gs[0, 1])  # bad_Probs pie
+ax3 = fig.add_subplot(gs[0, 2])  # Surname racial breakdown
+
+colors = [ "green", "red", "#ff7f0e", "#000000", "#1f77b4", "#c9bfbf", "#17becf"]
+
+#fig.set_title('Correct identifications of test data')
+# Probs pie (larger)
+P_pie = ax1.pie([Y,N], colors=colors)
+ax1.set_title('Probs BISG approach')
+
+# bad_Probs pie
+B_pie = ax2.pie([np.sum((B == T)),np.sum((B == T)==False)], colors=colors)
+ax2.set_title('bad_Probs Naive Approach')
+
+# Given Data pies
+
+W_pie = ax3.pie([np.sum((W == T)),np.sum((W == T)==False)], colors=colors)
+ax3.set_title('Worst approach')
+
+# Add a single legend for all pie charts
+plt.figlegend(P_pie[0], ['True','False'], loc='center right',)
+
+
+fig.subplots_adjust(right=0.85)
+
+# Display the plot
+plt.show()
+
 
 total_prob =  [np.sum(tvector,axis = 0),np.sum(Pvector,axis = 0),np.sum(Bvector,axis = 0),np.sum(Worst,axis=0)]
 
@@ -209,6 +252,52 @@ plt.xticks([r + barWidth for r in range(len(total_prob[0]))],
  
 plt.legend()
 plt.show()
+##############bar chart 2
+
+# total_prob =  [np.sum(T,axis = 0),np.sum(P,axis = 0),np.sum(B,axis = 0),np.sum(W,axis=0)]
+
+# for t in range(len(total_prob)):
+
+#     total_prob[t] = total_prob[t]/np.linalg.norm(total_prob[t])
+
+# print(total_prob)
+
+
+
+# # set width of bar
+# barWidth = 0.25
+# fig = plt.subplots(figsize =(12, 8))
+ 
+
+ 
+# # Set position of bar on X axis
+# br1 = np.arange(len(total_prob[0]))
+# br2 = [x + barWidth for x in br1]
+# br3 = [x + barWidth for x in br2]
+# br4 = [x + barWidth for x in br3]
+ 
+
+# # Make the plot
+# plt.bar(br1, total_prob[0], color ='r', width = barWidth,
+#         edgecolor ='grey', label ='Truth')
+# plt.bar(br2, total_prob[1], color ='g', width = barWidth,
+#         edgecolor ='grey', label ='Prediction')
+# plt.bar(br3, total_prob[2], color ='b', width = barWidth,
+#         edgecolor ='grey', label ='bad Prediction')
+# plt.bar(br4, total_prob[3], color ='c', width = barWidth,
+#         edgecolor ='grey', label ='Worst guess')
+ 
+# # Adding Xticks
+# plt.xlabel('Race', fontweight ='bold', fontsize = 15)
+# plt.ylabel('Total Proportion', fontweight ='bold', fontsize = 15)
+# plt.xticks([r + barWidth for r in range(len(total_prob[0]))],
+#         races)
+ 
+# plt.legend()
+# plt.show()
+################################3
+
+
 
 total = np.array([57.83619335,12.05021108,6.10673734,0.67934949,4.08779979,18.72987741,.01])
 
@@ -357,6 +446,16 @@ C = confusion(Pvector,tvector, 'BIFSG method With Correction')
 #Cb = confusion(Bvector,tvector,'Bad Pred')
 plt.show()
 #print(C)
+###########ROC
+
+
+
+
+
+
+
+
+
 
 P = np.argmax(Pvector, axis=1)
 T = np.argmax(tvector, axis=1)
@@ -424,4 +523,38 @@ plt.xticks([r + barWidth for r in range(len(total_prob[0]))],
         races)
  
 plt.legend()
+plt.show()
+
+
+#plotting BISG results vs niave approach
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+
+# Create a figure with custom GridSpec for flexible subplot sizes
+fig = plt.figure(figsize=(14, 8))
+gs = gridspec.GridSpec(1, 3, figure=fig,width_ratios=[1, 1, 1,], height_ratios=[1,])
+
+# Define the axes
+ax1 = fig.add_subplot(gs[0, 0])  # Probs pie (larger)
+ax2 = fig.add_subplot(gs[0, 1])  # bad_Probs pie
+ax3 = fig.add_subplot(gs[0, 2])  # Surname racial breakdown
+
+colors = [ "green", "red", "#ff7f0e", "#000000", "#1f77b4", "#c9bfbf", "#17becf"]
+
+#fig.set_title('Correct identifications of test data')
+# Probs pie (larger)
+P_pie = ax1.pie([Y,N], colors=colors)
+ax1.set_title('Probs BISG approach')
+
+# bad_Probs pie
+B_pie = ax2.pie([np.sum((B == T)),np.sum((B == T)==False)], colors=colors)
+ax2.set_title('bad_Probs Naive Approach')
+
+# Given Data pies
+
+W_pie = ax3.pie([np.sum((W == T)),np.sum((W == T)==False)], colors=colors)
+ax3.set_title('Worst approach')
+
+# Add a single legend for all pie charts
+plt.figlegend(P_pie[0], ['True','False'], loc='center right',)
 plt.show()
